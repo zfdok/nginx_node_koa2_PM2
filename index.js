@@ -1,18 +1,11 @@
-const Koa = require('koa')
-const Router = require('koa-router')
-
+const Koa = require('koa');
 const app = new Koa();
-const router = new Router();
-
-router
-  .get('/', async (ctx, next) => {
-    ctx.body = 'index'
-  })
-
-app
-  .use(router.routes())
-  .use(router.allowedMethods())
-
-app.listen(3000, () => {
-  console.log("server is running at 3000");
-})
+const router = require('./api/test')
+app.use(async (ctx, next) => {
+    const start = Date.now();
+    await next();
+    const ms = Date.now() - start;
+    console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
+app.use(router.routes())
+app.listen(3000);
